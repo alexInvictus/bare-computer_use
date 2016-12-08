@@ -25,7 +25,7 @@ void MX_NVIC_Init(void)
   HAL_NVIC_EnableIRQ(TIM3_IRQn);
 	
 	HAL_TIM_Base_Start_IT(&htim3);
-	HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);                                                    //开启左轮PWM波
+	HAL_TIM_PWM_Start(&htim13, TIM_CHANNEL_1);                                                    //开启左轮PWM波
 	HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);                                                    //开启右轮PWM波
 	if(HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&uhADCxConvertedValue2,100)!=HAL_OK)Error_Handler();   //开启ADC——DMA传输通道	
 }

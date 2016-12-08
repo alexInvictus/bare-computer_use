@@ -2,7 +2,7 @@
 #define _C_MOTOR_
 #include "all.h"
 
-void Motor_Ahead_Wait(void)
+ void Motor_Ahead_Wait(void)
 {
   switch(Motor_Status)
 	{
@@ -21,7 +21,7 @@ void Motor_Ahead_Wait(void)
 		    break;
 		case Run:
          ahead_wave();
-		     delay_ms(100);                
+         delay_ms(100);		
          Find_Rfid();
 		    break;
 				
@@ -324,18 +324,19 @@ void Back_Trailing(void)
 void Answer(void)                                  //回复给上位机RFID信息
 {      
 	int i=0;
-//	if((Rx_buff_22[4]!=Rx_buff_2[4])&&(Rx_buff_22[5]!=Rx_buff_2[5])&&(Rx_buff_22[6]!=Rx_buff_2[6])&&(Rx_buff_22[7]!=Rx_buff_2[7]))
-//		{
-			for(i=0;i<=len;i++)
+	u8 length=0;
+	length=USART_RX_STA_2&0x3FFF;
+	if((Rx_buff_22[4]!=Rx_buff_2[4])||(Rx_buff_22[5]!=Rx_buff_2[5])||(Rx_buff_22[6]!=Rx_buff_2[6])||(Rx_buff_22[7]!=Rx_buff_2[7]))
+		{
+			for(i=0;i<=length;i++)
 		 {
 			Rx_buff_22[i]=Rx_buff_2[i];
 		 }
-			USART_RX_STA_2=0;	
 			HAL_UART_Transmit(&huart3,(u8*)Loc,4,1000);   //上报位置
 			HAL_UART_Transmit(&huart3,&Rx_buff_22[4],4,1000);
 			HAL_UART_Transmit(&huart3,(u8*)GG,1,1000);
-			Find_Rfid_Match();
-//    }	
+//			Find_Rfid_Match();
+    }		
 }
                                                                                                                                                                
 void Find_Rfid(void)
@@ -373,6 +374,7 @@ void Find_Rfid(void)
 								HAL_UART_Transmit(&huart2,(u8*)Stop_cmd,4,1000);
 						}							
 						packflag_2=0;
+						USART_RX_STA_2=0;
 					}			
 }
 
@@ -459,7 +461,7 @@ void Set_Slowdown(int target)          //从目标速度减速到0
 void ahead_wave(void)
 {
 	int wave=0;
-	      wave=Get_Barrier();
+	      wave=Get_Barrier(0xe8,0);
         if(wave_watch==1)
 					{					  
               if(wave==1)
@@ -506,7 +508,7 @@ void ahead_wave(void)
 void back_wave(void)
 {
 	int wave=0;
-	    wave=Get_Barrier();
+	    wave=Get_Barrier(0xe8,1);
         if(wave_watch==1){
               if(wave==1)
 							{

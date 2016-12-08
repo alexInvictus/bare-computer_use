@@ -29,7 +29,7 @@ DMA_HandleTypeDef hdma_adc1;
 /*全局变量的声明*/
 u8 len;                               //反馈数组的长度
 u16 times=0;                          //统计时间
-u16 tim3_flag=0;                     //定时器时间
+u16 tim3_flag[ULTRA_NUM]={0,0};       //定时器时间
 int wave_watch=1;
 u16 flag_usart_1=0;                   //收到包头标志位
 u16 packflag_1=0;                     //收到包尾标志位.
@@ -40,8 +40,8 @@ u16 packflag_3=0;                     //收到包尾标志位.
 int tim13_val;                        //控制定时器13输出频率
 int tim14_val;                        //控制定时器14输出频率
 u16 n=0;
-u16 range=2000;				                //大于阈值的值，防止启动时误判报警
-int only_one=0;                       //只读一次的标志
+u16 range[ULTRA_NUM]={2000,2000};	    //大于阈值的值，防止启动时误判报警
+int only_one[ULTRA_NUM]={0,0};        //只读一次的标志
 uchar ptr[6];                         //显示用的数组
 uint Temp=0;                          //通过ADC_Average函数求平均后得到的值
 uchar shuzi[]={"0123456789.v"};   
@@ -115,8 +115,8 @@ extern DMA_HandleTypeDef hdma_adc1;
 extern u8 len;                       //反馈数组的长度
 extern u16 times;
 extern u16 flag_usart_1;
-extern u16 range;				//大于阈值的值，防止启动时误判报警
-extern int only_one;
+extern u16 range[ULTRA_NUM];				//大于阈值的值，防止启动时误判报警
+extern int only_one[ULTRA_NUM]; 
 extern int wave_watch;
 extern u16 n;
 extern u16 packflag_1;
@@ -126,7 +126,7 @@ extern u16 flag_usart_3;             //收到包头标志位
 extern u16 packflag_3;               //收到包尾标志位.
 extern int tim13_val;
 extern int tim14_val;
-extern u16 tim3_flag; 
+extern u16 tim3_flag[ULTRA_NUM]; 
 extern uchar ptr[6];                 //显示用的数组
 extern uint Temp;                    //ADC检测后保存值
 extern vu32 ADC_ConvertedValue;      //ADC传输的值

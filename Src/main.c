@@ -68,109 +68,108 @@ int main(void)
 	IIC_Init();                                            //模拟iic for 24c02初始化
   /* Initialize interrupts */
   MX_NVIC_Init();                                        //中断优先级的设置
-	Show_Static();
-	Voltage_Test();
-//	delay_ms(1000);                                         //等待系统稳定
+//	Show_Static();
+//	Voltage_Test();
+//delay_ms(1000);                                         //等待系统稳定
   while (1)
   {
-  switch(Command_State)
-	{
-		case Read_State: 			//读取状态  该模式下读取eeprom里面的小车ID号(只执行一次)		
-                 Eeprom_Read();			
-		             Send_Id();
-                 Command_State=Wait_State;	
-//		               ahead_wave();
-//		               delay_ms(100);
-							 break;	
-	 
-		case Wait_State:                                     //等待命令状态  (所有暂停点的判断case)
-			    if(packflag_3==1)
-					{
-					 if((Rx_buff_3[4]=='f')&&(Rx_buff_3[5]=='w'))
-					 {
-						 Command_State=Run_Ahead_State;              //起始位置收到go前进模式
-					 }
-					 else if((Rx_buff_3[4]=='b')&&(Rx_buff_3[5]=='k'))
-					 {
-						 Command_State=Run_Back_State;               //起始位置收到bk返回模式
-					 }
-					  else if((Rx_buff_3[4]=='r')&&(Rx_buff_3[5]=='k'))
-					 {
-						 Command_State=Run_Ruku_State;               //起始位置收到rk前进模式
-					 }
-            else if((Rx_buff_3[4]=='o')&&(Rx_buff_3[5]=='k')) 
-					 {
-						 Command_State=Store_State;
-					 }					 
-					   packflag_3=0;
-					   USART_RX_STA_3=0;
-					}
-				
-					     break;
-	  
-		case Store_State:                                                        //等待地图信息并分析的状态 换存地图。
-               if(Uart_Store()==1)
-								{
-								printf("a");
-		            Command_State=Analyse_State;
-								}			
-		           break;
-		
-    case Analyse_State:		 
-			    if(Key_Start==1)
-				{
-					HAL_UART_Transmit(&huart3,(u8*)Tsk,4,1000);                        //完成分析后按下按钮，发送指令给中控表示启动任务
-					HAL_UART_Transmit(&huart3,(u8*)Fw,3,1000);
-		      Command_State=Wait_State;
-	      }
-				  if(Key_Stop==1)
-				{
-					HAL_UART_Transmit(&huart3,(u8*)Tsk,4,1000);                        //完成分析后按下按钮，发送指令给中控表示启动任务
-					HAL_UART_Transmit(&huart3,(u8*)Bk,3,1000);
-		      Command_State=Wait_State;
-	      }	
-         if((Rx_buff_33[4]=='w')&&(Rx_buff_33[5]=='t'))
-					{
-						 Command_State=Run_Wt_State;                                     //直接判断是否去取料点。收到去取料点地图去取料点
-					}
-				 else if((Rx_buff_33[4]=='r')&&(Rx_buff_33[5]=='k'))
-					{
-						 Command_State=Run_Ruku_State;                                     //是否是入库点，是的话直接入库
-					}
-					     break;
-   				
-	  case Run_Ahead_State:                                                    //解析完地图，正常向前循迹的状态
-			   
-		       Motor_Ahead();
+//  switch(Command_State)
+//	{
+//		case Read_State: 			//读取状态  该模式下读取eeprom里面的小车ID号(只执行一次)		
+//                 Eeprom_Read();			
+//		             Send_Id();
+//                 Command_State=Wait_State;	
+//							 break;	
+//	 
+//		case Wait_State:                                     //等待命令状态  (所有暂停点的判断case)
+//			
+//			    if(packflag_3==1)
+//					{
+//					 if((Rx_buff_3[4]=='f')&&(Rx_buff_3[5]=='w'))
+//					 {
+//						 Command_State=Run_Ahead_State;              //起始位置收到go前进模式
+//					 }
+//					 else if((Rx_buff_3[4]=='b')&&(Rx_buff_3[5]=='k'))
+//					 {
+//						 Command_State=Run_Back_State;               //起始位置收到bk返回模式
+//					 }
+//					  else if((Rx_buff_3[4]=='r')&&(Rx_buff_3[5]=='k'))
+//					 {
+//						 Command_State=Run_Ruku_State;               //起始位置收到rk前进模式
+//					 }
+//            else if((Rx_buff_3[4]=='o')&&(Rx_buff_3[5]=='k')) 
+//					 {
+//						 Command_State=Store_State;
+//					 }					 
+//					   packflag_3=0;
+//					   USART_RX_STA_3=0;
+//					}
+//				
+//					     break;
+//	  
+//		case Store_State:                                                        //等待地图信息并分析的状态 换存地图。
+//               if(Uart_Store()==1)
+//								{
+//								printf("a");
+//		            Command_State=Analyse_State;
+//								}			
+//		           break;
+//		
+//    case Analyse_State:		 
+//			    if(Key_Start==1)
+//				{
+//					HAL_UART_Transmit(&huart3,(u8*)Tsk,4,1000);                        //完成分析后按下按钮，发送指令给中控表示启动任务
+//					HAL_UART_Transmit(&huart3,(u8*)Fw,3,1000);
+//		      Command_State=Wait_State;
+//	      }
+//				  if(Key_Stop==1)
+//				{
+//					HAL_UART_Transmit(&huart3,(u8*)Tsk,4,1000);                        //完成分析后按下按钮，发送指令给中控表示启动任务
+//					HAL_UART_Transmit(&huart3,(u8*)Bk,3,1000);
+//		      Command_State=Wait_State;
+//	      }	
+//         if((Rx_buff_33[4]=='w')&&(Rx_buff_33[5]=='t'))
+//					{
+//						 Command_State=Run_Wt_State;                                     //直接判断是否去取料点。收到去取料点地图去取料点
+//					}
+//				 else if((Rx_buff_33[4]=='r')&&(Rx_buff_33[5]=='k'))
+//					{
+//						 Command_State=Run_Ruku_State;                                     //是否是入库点，是的话直接入库
+//					}
+//					     break;
+//   				
+//	  case Run_Ahead_State:                                                    //解析完地图，正常向前循迹的状态
+//			   
+//		       Motor_Ahead();
 
-		           break;
-		case Run_Wt_State:
-			   
-		       Motor_Ahead_Wait();
-		
-		           break;
-		case Run_Back_State:                                                     //到达终点时，切换的向后循迹的状态
-			    
-		       Motor_Back(); 		      
-		      
-		           break;
-		
-		case Stop_State:
-			
-					 Stop();
-					 Command_State=Wait_State; 
-		           break;
-		
-		case Run_Ruku_State:
-			
-			     Motor_Ruku();
-		      
-		           break;
-		
-		default:
-			
-		           break;      
-		}
+//		           break;
+//		case Run_Wt_State:
+//			   
+//		       Motor_Ahead_Wait();
+//		
+//		           break;
+//		case Run_Back_State:                                                     //到达终点时，切换的向后循迹的状态
+//			    
+//		       Motor_Back(); 		      
+//		      
+//		           break;
+//		
+//		case Stop_State:
+//			
+//					 Stop();
+//					 Command_State=Wait_State; 
+//		           break;
+//		
+//		case Run_Ruku_State:
+//			
+//			     Motor_Ruku();
+//		      
+//		           break;
+//		
+//		default:
+//			
+//		           break;      
+//		}
  }
 }
 

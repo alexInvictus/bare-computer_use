@@ -48,7 +48,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				  Rx_buff_2[USART_RX_STA_2&0X3FFF]=aRxBuffer_2[0] ;
 					USART_RX_STA_2++;
 					if(USART_RX_STA_2>(USART_REC_LEN_2-1))
-					{flag_usart_2=0;//接收数据错误,重新开始接收	
+					{
+						flag_usart_2=0;//接收数据错误,重新开始接收	
 						USART_RX_STA_2=0;
 					}
 				}			
@@ -72,7 +73,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				  Rx_buff_3[USART_RX_STA_3&0X3FFF]=aRxBuffer_3[0] ;
 					USART_RX_STA_3++;
 					if(USART_RX_STA_3>(USART_REC_LEN_3-1))
-					{flag_usart_3=0;//接收数据错误,重新开始接收	
+					{
+					 flag_usart_3=0;//接收数据错误,重新开始接收	
 				   USART_RX_STA_3=0;
 					}			
 			}
@@ -191,12 +193,12 @@ int Uart_Store(void)                 //转存函数用Rx_buff_22来保存完好的地图
 				 {
 					Rx_buff_33[k]=Rx_buff_3[k];
 				 }
-				 packflag_3=0;
-				 USART_RX_STA_3=0;
 				 n=(Rx_buff_33[6]-'0')*10+(Rx_buff_33[7]-'0');
 				 Uart_Analyse();
 				return 1;
      }
+	packflag_3=0;
+	USART_RX_STA_3=0;
  }
  return 0;
 }	
